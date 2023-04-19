@@ -157,24 +157,8 @@ void turn_left()
     ao();
 }
 
-//////////////////////////////////////
-////////////  MAIN FUNC  /////////////
-//////////////////////////////////////
-// categorized different parts into functions for ease of collaboration and lack of oop in c
-int main()
+void square_with_threshold()
 {
-    enable_servos();
-    cmpc(LEFT_MOTOR); // use this for reference purposes
-    cmpc(RIGHT_MOTOR);
-
-    // we start in the middle of the board, in the narrow start box
-    // we turn right without moving forward, and then square up 
-    // (move backwards until both bumps are pressed to signify a straight robot)
-    // keep between 2700 and 2900
-    printf("Starting in the middle of the board, turning left...\n");
-    turn_left();
-    
-    printf("Keeping robot in threshold of between 4 and 5 inches away from pvc pipe...\n");
     while (!both_bump_pressed())
     {
         // less then the focal point means we're not close enough
@@ -201,9 +185,10 @@ int main()
             }
         }
     }
-    
+
     printf("Bump sensors have turned on, likely at pvc pipe...\n");
-    
+    printf("Moving forward to give robot breathing room.\n");
+
     // once we exited the while loop this means we are currenctly
     // facing our back to the pvc pipes
     // to give our robot a little breathing room, we move forward a little bit
@@ -211,8 +196,37 @@ int main()
     motor(RIGHT_MOTOR, MOTOR_SPEED_RIGHT);
     msleep(300);
     ao();
+}
+
+void drive_to_line()
+{
+    while (!on_line_horizontal())
+    {
+        motor(LEFT_MOTOR, MOTOR_SPEED_LEFT);
+        motor(RIGHT_MOTOR, MOTOR_SPEED_RIGHT);
+    }
+    ao();
+}
+
+//////////////////////////////////////
+////////////  MAIN FUNC  /////////////
+//////////////////////////////////////
+// categorized different parts into functions for ease of collaboration and lack of oop in c
+int main()
+{
+    enable_servos();
+    cmpc(LEFT_MOTOR); // use this for reference purposes
+    cmpc(RIGHT_MOTOR);
+
+    // we start in the middle of the board, in the narrow start box
+    // we turn right without moving forward, and then square up 
+    // (move backwards until both bumps are pressed to signify a straight robot)
+    // keep between 2700 and 2900
+    printf("Starting in the middle of the board, turning left...\n");
+    turn_left();
     
-    printf("Moved forward to give robot breathing room.\n");
+    printf("Keeping robot in threshold of between 4 and 5 inches away from pvc pipe...\n");
+    square_with_threshold();
     
     // we then turn right to face the black line above us
     turn_right();
@@ -220,11 +234,7 @@ int main()
     printf("Facing front to black line.\n");
     
     // drive until we are centered in the middle 
-    while (!on_line_horizontal())
-    {
-        motor(LEFT_MOTOR, MOTOR_SPEED_LEFT);
-        motor(RIGHT_MOTOR, MOTOR_SPEED_RIGHT);
-    }
+    drive_to_line();
     
     printf("Centered in the middle of line.");
 
