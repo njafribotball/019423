@@ -218,6 +218,8 @@ int main()
     cmpc(LEFT_MOTOR); // use this for reference purposes
     cmpc(RIGHT_MOTOR);
 
+    printf("Testing pull request\n");
+   
     // we start in the middle of the board, in the narrow start box
     // we turn right without moving forward, and then square up 
     // (move backwards until both bumps are pressed to signify a straight robot)
