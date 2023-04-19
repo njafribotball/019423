@@ -1,11 +1,3 @@
-/* 
-  Copyright (C) 2023 Noreen Jafri
-  All Rights Reserved
-
-  This source code is licensed under the MIT license found in the
-  LICENSE file in the root directory of this source tree.
-*/
-
 #include <kipr/botball.h>
 #include <stdbool.h>
 
@@ -172,16 +164,18 @@ int main()
     // we turn right without moving forward, and then square up 
     // (move backwards until both bumps are pressed to signify a straight robot)
     // keep between 2700 and 2900
-    turn_right();
-    printf("ok guys welcome back to my youtube channel\n");
-    printf("today we're turning right\n");
+    printf("Starting in the middle of the board, turning left...\n");
+    turn_left();
+    
+    printf("Keeping robot in threshold of between 4 and 5 inches away from pvc pipe...\n");
     while (!both_bump_pressed())
     {
         // less then the focal point means we're not close enough
         if (analog(RIGHT_DEPTH_SENSOR) < ET_FOCAL_POINT)
         {
-            motor(LEFT_MOTOR, -MOTOR_SPEED_LEFT);
-            printf("\nwe're turning left ");
+            motor(LEFT_MOTOR, -40);
+            motor(RIGHT_MOTOR, -MOTOR_SPEED_RIGHT);
+            // printf("\nwe're trying to shift right ");
         } else if (analog(RIGHT_DEPTH_SENSOR) > ET_FOCAL_POINT)
         {
             // greater then the focal point means we're closer
@@ -191,29 +185,45 @@ int main()
                 // do stuff
                 motor(LEFT_MOTOR, -MOTOR_SPEED_LEFT);
                 motor(RIGHT_MOTOR, -MOTOR_SPEED_RIGHT);
-                printf("\ngoing forward/backward ");
+                // printf("\ngoing forward/backward ");
             } else {
                 // if we get too close turn right
-                motor(RIGHT_MOTOR, -MOTOR_SPEED_RIGHT);
-                printf("\nturn right ");
+                motor(LEFT_MOTOR, -MOTOR_SPEED_RIGHT);
+                motor(RIGHT_MOTOR, -30);
+                // printf("\nturn left ");
             }
         }
     }
-
-    // focal point is 2700
     
-    // we then turn left to face the black line above us
-    turn_left();
-
-    // after that we move the pom sort servo to the side so we can capture the 
-    // red pom above us and move un til we detect the line
-    set_servo_position(SORT_SERVO, RIGHT);
-    move_past_whitespace();
-    set_servo_position(SORT_SERVO, LEFT); // capture it onto one side;
+    printf("Bump sensors have turned on, likely at pvc pipe...\n");
+    
+    // once we exited the while loop this means we are currenctly
+    // facing our back to the pvc pipes
+    // to give our robot a little breathing room, we move forward a little bit
+    motor(LEFT_MOTOR, MOTOR_SPEED_LEFT);
+    motor(RIGHT_MOTOR, MOTOR_SPEED_RIGHT);
+    msleep(300);
+    ao();
+    
+    printf("Moved forward to give robot breathing room.\n");
+    
+    // we then turn right to face the black line above us
+    turn_right();
+    
+    printf("Facing front to black line.\n");
+    
+    // drive until we are centered in the middle 
+    while (!on_line_horizontal())
+    {
+        motor(LEFT_MOTOR, MOTOR_SPEED_LEFT);
+        motor(RIGHT_MOTOR, MOTOR_SPEED_RIGHT);
+    }
+    
+    printf("Centered in the middle of line.");
 
     // since we are still facing straight we turn right to face the line, 
-    // might do a vertical line check but not sure
-    turn_right();
+    // turn left (we might do a vertical line check but it's probably fine)
+    turn_left();
 
     // we then start swiping poms
     swipe_poms();
