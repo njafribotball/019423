@@ -214,6 +214,10 @@ void drive_to_line()
 // categorized different parts into functions for ease of collaboration and lack of oop in c
 int main()
 {
+    // rehan says comment is cool
+    wait_for_light(0);
+    shut_down_in(120);
+   
     enable_servos();
     cmpc(LEFT_MOTOR); // use this for reference purposes
     cmpc(RIGHT_MOTOR);
