@@ -13,6 +13,10 @@
 ////////  (will need tweaking)  //////
 //////////////////////////////////////
 
+void back_up_turn_left();
+void back_up_turn_right();
+void forward();
+
 // servo ports
 int SORT_SERVO = 1;
 int TOP_SERVO = 2;
@@ -260,6 +264,34 @@ int main()
 
     // turn off all motors
     ao();
-    
+
+   
+   
     return 0;
+}
+
+void forward()
+{
+    motor(0, 40);
+    motor(3, 40);
+}
+void back_up_turn_left()
+{
+    motor(0, -65);
+    motor(3, -65);
+   msleep(1100);
+    
+    motor(0, 60);
+    motor(3, 0);
+    msleep(1500);
+} 
+void back_up_turn_right()
+{
+    motor(0, -65);
+    motor(3, -65);
+    msleep(1100);
+   
+    motor(0, 0);
+    motor(3, 60);
+    msleep(1500);
 }
