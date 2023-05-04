@@ -244,6 +244,8 @@ int main()
 
     // since we are still facing straight we turn right to face the line, 
     // turn left (we might do a vertical line check but it's probably fine)
+    // this is currently where the LOW VOLTAGE error occurs for the 2819 robot
+    // im suspecting that the error is a problem with the code, however i cannot exactly be sure
     turn_left();
 
     // we then start swiping poms
